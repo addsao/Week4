@@ -64,7 +64,6 @@ struct Product: Identifiable, Hashable, Codable {
 
 extension Product {
     
-    // Parse 1 dòng: 1, "Cá bảy màu", 1, 10000, 45, "Cá guppy...", "guppy"
     init?(fromCSVLine line: String) {
         let clean = line.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !clean.isEmpty else { return nil }
@@ -88,13 +87,13 @@ extension Product {
         self.price = price
         self.stock = stock
         self.description = cols[5]
-        self.imageName = "fish\(id)" // Gán tự động theo fish1, fish2...
+        self.imageName = "fish\(id)"
         self.unit = (catId == 1 ? "con" : (catId == 2 ? "cây" : "cái"))
         self.isFeatured = stock > 20
         self.rating = 4.8
     }
     
-    // Đọc từ file fish.txt
+
     static func loadAll(from fileName: String = "fish") -> [Product] {
         guard let url = Bundle.main.url(forResource: fileName, withExtension: "txt"),
               let text = try? String(contentsOf: url, encoding: .utf8) else {

@@ -43,7 +43,7 @@ extension ProductCategory {
         self.isProductCategory = (cols[6].lowercased() == "true")
     }
     
-    // Đọc trực tiếp từ categories.txt
+
     static func loadAll() -> [ProductCategory] {
         guard let url = Bundle.main.url(forResource: "categories", withExtension: "txt"),
               let text = try? String(contentsOf: url, encoding: .utf8) else {
