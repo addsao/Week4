@@ -6,11 +6,8 @@
 //
 
 import Foundation
-import Foundation
 
 struct Order: Identifiable, Hashable, Codable {
-
- 
     let id: UUID
     var customerName: String
     var phoneNumber: String
@@ -23,7 +20,6 @@ struct Order: Identifiable, Hashable, Codable {
 
     static let defaultShippingFee: Double = 30_000
     static let freeShippingThreshold: Double = 500_000
-
 
     init(
         id: UUID = UUID(),
@@ -57,7 +53,6 @@ struct Order: Identifiable, Hashable, Codable {
         )
     }
 
-
     static func calculateShippingFee(for subtotal: Double) -> Double {
         subtotal >= freeShippingThreshold ? 0 : defaultShippingFee
     }
@@ -67,10 +62,8 @@ struct Order: Identifiable, Hashable, Codable {
     var totalQuantity: Int { items.totalQuantity }
     var isFreeShipping: Bool { shippingFee == 0 }
     var formattedSubtotal: String { subtotal.vndFormatted }
-    var formattedShippingFee: String {isFreeShipping ? "Miễn phí" : shippingFee.vndFormatted}
-
+    var formattedShippingFee: String { isFreeShipping ? "Miễn phí" : shippingFee.vndFormatted }
     var formattedTotal: String { totalAmount.vndFormatted }
-
 
     var orderCode: String {
         "DH-" + id.uuidString.prefix(6).uppercased()
@@ -95,14 +88,12 @@ struct Order: Identifiable, Hashable, Codable {
             : first.product.name
     }
 
-
     var isValid: Bool {
         !customerName.trimmingCharacters(in: .whitespaces).isEmpty
             && !phoneNumber.trimmingCharacters(in: .whitespaces).isEmpty
             && !shippingAddress.trimmingCharacters(in: .whitespaces).isEmpty
             && !items.isEmpty
     }
-
 
     @discardableResult
     mutating func advanceStatus() -> Bool {
@@ -119,9 +110,8 @@ struct Order: Identifiable, Hashable, Codable {
     }
 }
 
-
+// MARK: - Quản lý danh sách Orders
 extension Array where Element == Order {
-
     func filtered(by status: OrderStatus?) -> [Order] {
         guard let status else { return self }
         return filter { $0.status == status }
@@ -136,58 +126,56 @@ extension Array where Element == Order {
     }
 }
 
-
+// MARK: - Dữ liệu mẫu (Sample Orders)
 extension Order {
+    static var sampleOrders: [Order] {
+        let products = Product.loadAll()
+        guard !products.isEmpty else { return [] }
 
-    private static let products = Product.sampleProducts
+        var list: [Order] = []
 
-    static let sampleOrders: [Order] = [
-        Order(
+        // Đơn 1
+        list.append(Order(
             customerName: "Nguyễn Văn An",
             phoneNumber: "0901234567",
             shippingAddress: "Phường Trấn Biên, Thành phố Đồng Nai",
-            items: [
-                CartItem(product: products[0], quantity: 10), // Cá Neon Tetra
-                CartItem(product: products[3], quantity: 2)   // Cây Java Fern
-            ],
-            orderDate: Date().addingTimeInterval(-2 * 3600),  // 2 giờ trước
+            items: [CartItem(product: products[0], quantity: 10)],
+            orderDate: Date().addingTimeInterval(-2 * 3600),
             status: .pending,
             note: "Gọi trước khi giao"
-        ),
-        Order(
-            customerName: "Trần Thị Bình",
-            phoneNumber: "0912345678",
-            shippingAddress: "Phường Bến Thành, TP. Hồ Chí Minh",
-            items: [
-                CartItem(product: products[6], quantity: 1),  // Bể kính 60cm
-                CartItem(product: products[7], quantity: 1)   // Máy lọc nước
-            ],
-            orderDate: Date().addingTimeInterval(-26 * 3600), // hôm qua
-            status: .shipping
-        ),
-        Order(
-            customerName: "Lê Minh Châu",
-            phoneNumber: "0987654321",
-            shippingAddress: "Phường Thủ Dầu Một, TP. Hồ Chí Minh",
-            items: [
-                CartItem(product: products[11], quantity: 20), // Tép Red Cherry
-                CartItem(product: products[9], quantity: 1)    // Thức ăn Tetra Bits
-            ],
-            orderDate: Date().addingTimeInterval(-3 * 24 * 3600), // 3 ngày trước
-            status: .delivered
-        ),
-        Order(
-            customerName: "Phạm Quốc Dũng",
-            phoneNumber: "0933111222",
-            shippingAddress: "Phường Trấn Biên, Thành phố Đồng Nai",
-            items: [
-                CartItem(product: products[1], quantity: 2)    // Cá Vàng Ranchu
-            ],
-            orderDate: Date().addingTimeInterval(-5 * 24 * 3600),
-            status: .cancelled,
-            note: "Khách đổi ý"
-        )
-    ]
+        ))
 
-    static let preview = sampleOrders[0]
+        // Đơn 2
+        if products.count > 2 {
+            list.append(Order(
+                customerName: "Trần Thị Bình",
+                phoneNumber: "0912345678",
+                shippingAddress: "Phường Bến Thành, TP. Hồ Chí Minh",
+                items: [CartItem(product: products[1], quantity: 1)],
+                orderDate: Date().addingTimeInterval(-26 * 3600),
+                status: .shipping
+            ))
+        }
+
+        // Đơn 3
+        if products.count > 4 {
+            list.append(Order(
+                customerName: "Lê Minh Châu",
+                phoneNumber: "0987654321",
+                shippingAddress: "Phường Thủ Dầu Một, TP. Hồ Chí Minh",
+                items: [CartItem(product: products[2], quantity: 5)],
+                orderDate: Date().addingTimeInterval(-3 * 24 * 3600),
+                status: .delivered
+            ))
+        }
+
+        return list
+    }
+
+    static var preview: Order {
+        sampleOrders.first ?? Order(
+            customerName: "Khách lẻ",
+            items: []
+        )
+    }
 }

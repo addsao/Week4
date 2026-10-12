@@ -11,31 +11,36 @@ import SwiftUI
 struct CategoryRowView: View {
     let categories: [ProductCategory]
     @Binding var selectedCategory: ProductCategory?
-    
+
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 16) {
-                ForEach(categories) { cat in
-                    Button {
-                        if selectedCategory?.id == cat.id {
-                            selectedCategory = nil
-                        } else {
-                            selectedCategory = cat
-                        }
-                    } label: {
-                        VStack(spacing: 6) {
-                            Image(systemName: cat.systemIconName)
-                                .font(.title2)
-                                .frame(width: 48, height: 48)
-                                .background(selectedCategory?.id == cat.id ? Color.blue.opacity(0.2) : Color.blue.opacity(0.1))
-                                .foregroundColor(.blue)
-                                .clipShape(Circle())
+                ForEach(categories) { category in
+                    VStack(spacing: 8) {
+                        ZStack {
+                            Circle()
+                                .fill(selectedCategory?.id == category.id ? Color.blue.opacity(0.2) : Color.blue.opacity(0.08))
+                                .frame(width: 60, height: 60)
                             
-                            Text(cat.name)
-                                .font(.caption)
-                                .foregroundColor(.primary)
+                            Image(systemName: category.systemIconName)
+                                .font(.system(size: 26))
+                                .foregroundColor(selectedCategory?.id == category.id ? .blue : .blue.opacity(0.8))
                         }
-                        .frame(width: 72)
+                        
+                        Text(category.name)
+                            .font(.caption)
+                            .fontWeight(selectedCategory?.id == category.id ? .bold : .regular)
+                            .foregroundColor(.primary)
+                            .multilineTextAlignment(.center)
+                            .frame(width: 75)
+                            .lineLimit(2)
+                    }
+                    .onTapGesture {
+                        if selectedCategory?.id == category.id {
+                            selectedCategory = nil // Bấm lại thì hủy chọn, hiện toàn bộ
+                        } else {
+                            selectedCategory = category
+                        }
                     }
                 }
             }

@@ -1,72 +1,37 @@
-//
-//  Cartitem.swift
-//  Week4.team
-//
-//  Created by MAY 05 on 5/10/26.
-//
 import Foundation
 
 struct CartItem: Identifiable, Hashable, Codable {
-    let id: UUID
+    var id = UUID()
     var product: Product
-    var quantity: Int
+    var quantity: Int = 1
 
-    init(id: UUID = UUID(), product: Product, quantity: Int = 1) {
-        self.id = id
-        self.product = product
-        self.quantity = max(1, quantity)
-    }
-
-    var subtotal: Double {
-        product.price * Double(quantity)}
+    var subtotal: Double { product.price * Double(quantity) }
     var formattedSubtotal: String { subtotal.vndFormatted }
-    var savedAmount: Double {
-        guard let originalPrice = product.originalPrice, originalPrice > product.price else { return 0 }
-        return (originalPrice - product.price) * Double(quantity)
-    }
-    var canIncrease: Bool { quantity < product.stock }
-    var canDecrease: Bool { quantity > 1 }
 
-
-    @discardableResult
-    mutating func increase() -> Bool {
-        guard canIncrease else { return false }
-        quantity += 1
-        return true
+    mutating func increase() {
+        if quantity < product.stock { quantity += 1 }
     }
 
-    @discardableResult
-    mutating func decrease() -> Bool {
-        guard canDecrease else { return false }
-        quantity -= 1
-        return true
+    mutating func decrease() {
+        if quantity > 1 { quantity -= 1 }
     }
 
-    mutating func setQuantity(_ newValue: Int) {
-        let upperBound = max(1, product.stock)
-        quantity = min(max(1, newValue), upperBound)
+    mutating func setQuantity(_ value: Int) {
+        quantity = min(max(1, value), max(1, product.stock))
     }
 }
 
-
 extension Array where Element == CartItem {
+    var totalQuantity: Int { reduce(0) { $0 + $1.quantity } }
+    var totalAmount: Double { reduce(0) { $0 + $1.subtotal } }
 
-    var totalQuantity: Int {reduce(0) { $0 + $1.quantity }}
-    var totalAmount: Double {reduce(0) { $0 + $1.subtotal }}
-    var totalSaved: Double {reduce(0) { $0 + $1.savedAmount }}
-
-    @discardableResult
-    mutating func add(_ product: Product, quantity: Int = 1) -> Bool {
-        guard product.isInStock, quantity > 0 else { return false }
-
-        if let index = firstIndex(where: { $0.product.id == product.id }) {
-            self[index].setQuantity(self[index].quantity + quantity)
+    mutating func add(_ product: Product, quantity: Int = 1) {
+        guard product.isInStock else { return }
+        if let idx = firstIndex(where: { $0.product.id == product.id }) {
+            self[idx].setQuantity(self[idx].quantity + quantity)
         } else {
-            var item = CartItem(product: product)
-            item.setQuantity(quantity)
-            append(item)
+            append(CartItem(product: product, quantity: quantity))
         }
-        return true
     }
 
     mutating func remove(_ product: Product) {
@@ -74,10 +39,19 @@ extension Array where Element == CartItem {
     }
 }
 
-
 extension CartItem {
-    static let sampleCart: [CartItem] = [
-        CartItem(product: Product.sampleProducts[0], quantity: 10), 
-        CartItem(product: Product.sampleProducts[3], quantity: 2)   
-    ]
+    static var sampleCart: [CartItem] {
+        let items = Product.loadAll()
+        return items.isEmpty ? [] : [CartItem(product: items[0], quantity: 2)]
+    }
+}
+
+extension Double {
+    var vndFormatted: String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.groupingSeparator = "."
+        let str = formatter.string(from: NSNumber(value: self)) ?? "\(Int(self))"
+        return str + "đ"
+    }
 }
