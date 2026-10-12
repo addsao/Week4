@@ -39,9 +39,6 @@ struct HomeView: View {
                 }
                 .padding(.bottom, 20)
             }
-            #if os(iOS)
-            .toolbar(.hidden, for: .navigationBar)
-            #endif
         }
     }
 }

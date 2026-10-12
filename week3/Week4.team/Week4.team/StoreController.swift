@@ -22,19 +22,12 @@ class StoreController: ObservableObject {
     }
     
     func loadData() {
-        self.categories = ProductCategory.sampleCategories
-        self.products = Product.sampleProductsWithRandomImages
+        let loadedCategories = ProductCategory.loadAll()
+        self.categories = loadedCategories
+        self.products = Product.loadAll()
         self.cart = CartItem.sampleCart
         self.orders = Order.sampleOrders
     }
-    
-    func randomizeProductImages() {
-            self.products = products.map { product in
-                var updated = product
-                updated.imageName = Product.randomImageName
-                return updated
-            }
-        }
     
     var filteredProducts: [Product] {
         products.filter { product in

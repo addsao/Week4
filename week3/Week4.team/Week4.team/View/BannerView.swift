@@ -34,3 +34,4 @@ struct BannerView: View {
         .padding(.horizontal)
     }
 }
+
