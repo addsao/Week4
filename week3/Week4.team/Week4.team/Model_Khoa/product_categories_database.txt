@@ -7,5 +7,5 @@ id,name,iconName,systemIconName,subtitles,backgroundHex,isProductCategory
 66666666,"Fish Food","cat_food","takeoutbag.and.cup.and.straw.fill","Fish Food; Shrimp Food","#FFF1E3",true
 77777777,"Medicine & Care","cat_medicine","cross.case.fill","Treatments; Nutrition","#E6EEFF",true
 88888888,"Pet Shrimp","cat_shrimp","drop.fill","Ornamental Shrimp; Colored Shrimp","#FFEDE6",true
-9999999,"Promotions","cat_promotion","tag.fill","Today's Deals","#FFEDE3",false
-0000000,"Support & Advice","cat_support","bubble.left.and.bubble.right.fill","Q&A; Tips & Experience","#E6F7EA",false
+99999999,"Promotions","cat_promotion","tag.fill","Today's Deals","#FFEDE3",false
+00000000,"Support & Advice","cat_support","bubble.left.and.bubble.right.fill","Q&A; Tips & Experience","#E6F7EA",false
