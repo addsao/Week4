@@ -1,0 +1,131 @@
+=====================================================================
+   FISHSTORE – APP QUẢN LÝ CỬA HÀNG CÁ CẢNH "CÁ CẢNH XINH"
+   SwiftUI • Mô hình MVC • Dữ liệu lưu bằng file .txt
+   Yêu cầu: Xcode 15 trở lên, iOS 16 trở lên
+=====================================================================
+
+1. CẤU TRÚC THƯ MỤC (MVC)
+---------------------------------------------------------------------
+FishStore/
+├── FishStoreApp.swift        Điểm bắt đầu, tạo 3 Controller
+├── ContentView.swift         Màn hình chính: thanh 5 tab + toast
+│
+├── Models/                   M – DỮ LIỆU
+│   ├── ProductCategory.swift   Danh mục      (category.txt)
+│   ├── Product.swift           Sản phẩm      (fish.txt)
+│   ├── CartItem.swift          Dòng giỏ hàng
+│   ├── Order.swift             Đơn hàng      (orders.txt)
+│   ├── OrderItem.swift         Sản phẩm trong đơn
+│   ├── OrderStatus.swift       Trạng thái đơn
+│   └── Helpers/
+│       ├── TxtStorage.swift    Đọc / ghi file txt
+│       └── Formatters.swift    Định dạng tiền, ngày, tìm không dấu
+│
+├── Controllers/              C – XỬ LÝ NGHIỆP VỤ
+│   ├── ProductController.swift  Đọc danh mục + sản phẩm, thêm/sửa/xóa, trừ kho
+│   ├── CartController.swift     Giỏ hàng, tính tiền, phí ship
+│   └── OrderController.swift    Đặt hàng, hủy đơn, đổi trạng thái
+│
+├── Views/                    V – GIAO DIỆN
+│   ├── Home/       HomeView, HomeHeaderView, SearchBarView, BannerView,
+│   │               CategoryRowView, ProductSectionView
+│   ├── Category/   CategoryListView, ProductListView
+│   ├── Product/    ProductCardView, ProductDetailView, ProductFormView
+│   ├── Cart/       CartView, CheckoutView
+│   ├── Order/      OrderListView, OrderDetailView
+│   ├── Manage/     ManageProductsView
+│   └── Components/ AppTheme, CommonViews (các view dùng chung)
+│
+└── Data/                     File dữ liệu mẫu
+    ├── category.txt
+    ├── fish.txt
+    └── orders.txt
+
+Luồng dữ liệu:
+   file .txt  →  TxtStorage (Model)  →  Controller  →  View
+   View bấm nút  →  Controller xử lý  →  ghi lại file .txt  →  View tự cập nhật
+
+View KHÔNG đọc file trực tiếp, chỉ gọi Controller.
+
+
+2. ĐỊNH DẠNG FILE TXT
+---------------------------------------------------------------------
+category.txt   id, "tên"
+    1, "Cá cảnh"
+
+fish.txt       id, "tên", categoryId, giá, tồn kho, "mô tả", "tên ảnh"
+    1, "Cá bảy màu", 1, 10000, 45, "Cá guppy nhiều màu", "guppy"
+    (Dòng ngắn  1, "Cá bảy màu", 1, 10000, 45  vẫn đọc được)
+
+orders.txt     id, "tên khách", "SĐT", "địa chỉ", thời gian, "trạng thái",
+               phí ship, "sản phẩm", "ghi chú"
+    "sản phẩm" có dạng  productId|số lượng|đơn giá|tên ; nối bằng dấu ;
+
+- Chuỗi đặt trong "..." (bên trong được phép có dấu phẩy).
+- Dòng bắt đầu bằng # được bỏ qua (dùng để ghi chú).
+- File lưu dạng UTF-8 để giữ dấu tiếng Việt.
+
+
+3. CÁCH TẠO PROJECT TRONG XCODE
+---------------------------------------------------------------------
+B1. Xcode → File → New → Project → iOS → App
+    Product Name: FishStore | Interface: SwiftUI | Language: Swift
+B2. Xóa 2 file Xcode tự tạo: FishStoreApp.swift và ContentView.swift.
+B3. Kéo toàn bộ nội dung thư mục FishStore/ (Models, Views, Controllers,
+    Data, FishStoreApp.swift, ContentView.swift) vào project.
+    Trong hộp thoại, chọn:
+      [x] Copy items if needed
+      (•) Create groups
+      [x] Target: FishStore            ← BẮT BUỘC, nếu không app không đọc được txt
+B4. Chọn Target FishStore → General → Minimum Deployments: iOS 16.0
+B5. Chọn Simulator iPhone 15 → bấm Run (Cmd+R).
+
+Kiểm tra file txt đã vào app chưa:
+    Target → Build Phases → Copy Bundle Resources → phải thấy
+    category.txt, fish.txt, orders.txt.
+
+(Tuỳ chọn) Thêm ảnh vào Assets.xcassets, đặt tên trùng cột "tên ảnh"
+trong fish.txt (vd: guppy, neon_tetra...). Thêm "logo" và "banner_home"
+để thay logo và nền banner. Không có ảnh thì app tự dùng icon.
+
+
+4. CÁC CHỨC NĂNG
+---------------------------------------------------------------------
+Trang chủ   Header (logo, chuông = số đơn đang giao, giỏ = số lượng),
+            địa chỉ, tìm kiếm không dấu, banner, 8 danh mục, sản phẩm nổi bật.
+Danh mục    Danh sách danh mục → sản phẩm trong danh mục,
+            tìm kiếm, sắp xếp theo giá / tên / tồn kho.
+Chi tiết    Ảnh, giá, tồn kho, mô tả, chọn số lượng, thêm vào giỏ, sửa.
+Giỏ hàng    Tăng / giảm / xóa, tạm tính, phí ship (30.000đ,
+            miễn phí từ 500.000đ), đặt hàng.
+Thanh toán  Nhập tên, SĐT (10 số), địa chỉ → ghi orders.txt, trừ kho fish.txt.
+Đơn hàng    Lọc theo trạng thái, xem chi tiết, hủy đơn (hoàn kho),
+            chuyển trạng thái Chờ xử lý → Đang chuẩn bị → Đang giao → Đã giao.
+Quản lý     Thống kê, thêm / sửa / xóa sản phẩm (ghi fish.txt),
+            đọc lại file, khôi phục dữ liệu mẫu, xem đường dẫn file.
+
+
+5. FILE ĐƯỢC LƯU Ở ĐÂU?
+---------------------------------------------------------------------
+File trong Bundle của app chỉ đọc được. Lần chạy đầu, app chép
+category.txt, fish.txt, orders.txt sang thư mục Documents của app,
+và từ đó mọi thao tác đọc / ghi đều làm trên bản ở Documents.
+
+→ File fish.txt trong project Xcode KHÔNG thay đổi khi thêm sản phẩm.
+→ Xem file thật: tab Quản lý → cuối trang có đường dẫn → copy →
+  Finder → Cmd+Shift+G → dán → Enter.
+→ Sửa file txt trong project mà muốn app đọc lại: tab Quản lý →
+  "Khôi phục dữ liệu mẫu", hoặc xóa app khỏi Simulator rồi chạy lại.
+
+
+6. LỖI THƯỜNG GẶP
+---------------------------------------------------------------------
+- Màn hình trống, không có danh mục / sản phẩm
+    → Chưa tick Target khi kéo file txt (xem B3, mục 3).
+- Lỗi "'fish.fill' ... not found" hoặc NavigationStack không có
+    → Minimum Deployments đang thấp hơn iOS 16.
+- Lỗi "Invalid redeclaration of 'ContentView'"
+    → Chưa xóa ContentView.swift do Xcode tạo sẵn (B2).
+- Một dòng trong fish.txt không hiện
+    → Sai định dạng (thiếu cột, giá có dấu chấm...). Xem log trong console:
+      "⚠️ fish.txt – bỏ qua dòng sai định dạng".

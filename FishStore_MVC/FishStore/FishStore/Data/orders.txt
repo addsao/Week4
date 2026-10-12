@@ -1,0 +1,3 @@
+1, "Nguyễn Văn An", "0901234567", "Phường Trấn Biên, Thành phố Đồng Nai", 1791167400, "Đã giao", 0, "2|10|20000|Cá Neon Tetra;10|1|1200000|Bể kính siêu trong 60cm", "Gọi trước khi giao"
+2, "Trần Thị Bình", "0912345678", "Phường Bến Thành, TP. Hồ Chí Minh", 1791619800, "Đang giao", 30000, "1|5|10000|Cá bảy màu;15|1|45000|Thức ăn cá Tetra Bits", ""
+3, "Lê Minh Châu", "0987654321", "Phường Thủ Dầu Một, TP. Hồ Chí Minh", 1791769500, "Chờ xử lý", 30000, "17|20|15000|Tép Red Cherry", "Giao buổi sáng"

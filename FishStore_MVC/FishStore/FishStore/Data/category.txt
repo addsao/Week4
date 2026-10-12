@@ -1,0 +1,8 @@
+1, "Cá cảnh"
+2, "Cây thủy sinh"
+3, "Chậu cá"
+4, "Phụ kiện bể"
+5, "Thiết bị lọc"
+6, "Thức ăn"
+7, "Thuốc & Chăm sóc"
+8, "Tép cảnh"
