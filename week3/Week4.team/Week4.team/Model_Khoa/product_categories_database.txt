@@ -1,0 +1,11 @@
+id,name,iconName,systemIconName,subtitles,backgroundHex,isProductCategory
+11111111,"Aquarium Fish","cat_fish","fish.fill","Freshwater Fish; Marine Fish","#FFEDE6",true
+22222222,"Aquatic Plants","cat_plant","leaf.fill","Foreground Plants; Midground Plants","#E8F7E4",true
+33333333,"Tank Accessories","cat_decoration","mountain.2.fill","Rocks; Driftwood; Substrate","#EEF1F5",true
+44444444,"Fish Tanks","cat_tank","cube.transparent","Aquascape Tanks; Glass Tanks","#E4F3FC",true
+55555555,"Filter Equipment","cat_filter","fan.fill","Filters; Air Pumps; LED Lights","#E9EEF6",true
+66666666,"Fish Food","cat_food","takeoutbag.and.cup.and.straw.fill","Fish Food; Shrimp Food","#FFF1E3",true
+77777777,"Medicine & Care","cat_medicine","cross.case.fill","Treatments; Nutrition","#E6EEFF",true
+88888888,"Pet Shrimp","cat_shrimp","drop.fill","Ornamental Shrimp; Colored Shrimp","#FFEDE6",true
+9999999,"Promotions","cat_promotion","tag.fill","Today's Deals","#FFEDE3",false
+0000000,"Support & Advice","cat_support","bubble.left.and.bubble.right.fill","Q&A; Tips & Experience","#E6F7EA",false
